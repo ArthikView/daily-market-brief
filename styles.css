@@ -30,3 +30,9 @@
 .share-actions a,.share-actions button{display:inline-block;border:1px solid #d9dde1;background:#fff;color:#344255;padding:10px 12px;text-decoration:none;font:10px var(--mono);cursor:pointer}
 .share-actions a:hover,.share-actions button:hover{border-color:var(--gold);color:#8b6735}
 @media(max-width:760px){.featured-issues,.research-library-grid{grid-template-columns:1fr}.contact-inner{align-items:flex-start;flex-direction:column}.contact-inner>a{width:100%;text-align:center}.share-strip{align-items:flex-start;flex-direction:column}.share-actions{width:100%}}
+
+/* PWA install control */
+.install-app-btn{border:1px solid var(--gold);background:var(--navy);color:#fff;padding:10px 13px;font:10px var(--mono);letter-spacing:.08em;cursor:pointer}
+.install-app-btn:hover{background:#1c3049}
+.install-app-btn[hidden]{display:none}
+@media(max-width:760px){.install-app-btn{width:100%;text-align:center;padding:13px}}
