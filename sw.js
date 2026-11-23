@@ -8,6 +8,7 @@ const APP_SHELL = [
   BASE_PATH + "app.js",
   BASE_PATH + "pwa.js",
   BASE_PATH + "manifest.json",
+  BASE_PATH + "issues/index.json",
   BASE_PATH + "assets/favicon.svg",
   BASE_PATH + "assets/app-icon.svg",
   BASE_PATH + "offline.html"
@@ -70,7 +71,7 @@ self.addEventListener("push", event => {
   catch (_) { payload = { body: event.data ? event.data.text() : "A new publication is available." }; }
 
   const target = payload.url || BASE_PATH;
-  const safeUrl = new URL(target, self.location.origin);
+  const safeUrl = new URL(target, self.location.origin + BASE_PATH);
   const url = safeUrl.origin === self.location.origin ? safeUrl.href : self.location.origin + BASE_PATH;
 
   event.waitUntil(self.registration.showNotification(payload.title || "Arthik View", {
