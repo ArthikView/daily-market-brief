@@ -1,10 +1,13 @@
 /* Arthik View PWA installation and service-worker registration. */
 (() => {
+  const scriptUrl = document.currentScript
+    ? new URL(document.currentScript.src, window.location.href)
+    : new URL("./pwa.js", window.location.href);
+  const workerUrl = new URL("sw.js", scriptUrl);
+  const workerScope = new URL("./", workerUrl).pathname;
+
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      const scriptUrl = new URL(document.currentScript.src, window.location.href);
-      const workerUrl = new URL("sw.js", scriptUrl);
-      const workerScope = new URL("./", workerUrl).pathname;
       navigator.serviceWorker.register(workerUrl.href, { scope: workerScope })
         .catch(error => console.error("Arthik View service worker registration failed:", error));
     });
