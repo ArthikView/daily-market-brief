@@ -47,7 +47,7 @@ jobs:
               raise SystemExit(0)
 
           changed = subprocess.check_output(
-              ["git", "diff", "--diff-filter=AM", "--name-only", before, after, "--", "issues/*.html", "research/*.html"],
+              ["git", "diff", "--diff-filter=A", "--name-only", before, after, "--", "issues/*.html", "research/*.html"],
               text=True
           ).splitlines()
           articles = [p for p in changed if p.endswith(".html") and p != "issues/issue-template.html"]
