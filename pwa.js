@@ -2,7 +2,10 @@
 (() => {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js", { scope: "./" })
+      const scriptUrl = new URL(document.currentScript.src, window.location.href);
+      const workerUrl = new URL("sw.js", scriptUrl);
+      const workerScope = new URL("./", workerUrl).pathname;
+      navigator.serviceWorker.register(workerUrl.href, { scope: workerScope })
         .catch(error => console.error("Arthik View service worker registration failed:", error));
     });
   }
