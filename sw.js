@@ -9,6 +9,7 @@ const APP_SHELL = [
   BASE_PATH + "pwa.js",
   BASE_PATH + "manifest.json",
   BASE_PATH + "assets/favicon.svg",
+  BASE_PATH + "assets/app-icon.svg",
   BASE_PATH + "offline.html"
 ];
 
@@ -74,7 +75,7 @@ self.addEventListener("push", event => {
 
   event.waitUntil(self.registration.showNotification(payload.title || "Arthik View", {
     body: payload.body || payload.message || "A new article or market brief has been published.",
-    icon: self.location.origin + BASE_PATH + "assets/favicon.svg",
+    icon: self.location.origin + BASE_PATH + "assets/app-icon.svg",
     badge: self.location.origin + BASE_PATH + "assets/favicon.svg",
     data: { url },
     tag: payload.tag || "arthik-view-publication"
