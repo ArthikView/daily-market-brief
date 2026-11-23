@@ -2,28 +2,17 @@
   "issues": [
     {
       "date": "2026-11-23",
-      "title": "The rally hits a wall: banks and metals drag the market lower",
-      "summary": "Sensex falls 1.77% and Nifty drops 1.75% after reversing a strong opening. Banks and metals lead profit-taking, while November PMI remains expansionary.",
+      "title": "A sharp market reversal, but India's activity pulse stays expansionary",
+      "summary": "Sensex falls 1.77% and Nifty 50 drops 1.75% as banks and metals lead profit-taking. November flash PMI remains expansionary, while the RBI conducts two VRR liquidity operations.",
       "tags": [
-        "Indian Markets",
+        "India Markets",
         "Sensex",
         "Nifty 50",
-        "Banking",
-        "Metals",
-        "India PMI"
-      ],
-      "url": "issues/2026-11-23-market-wrap.html"
-    },
-    {
-      "date": "2026-11-23",
-      "title": "India's factory momentum gets a lift as services cool slightly",
-      "summary": "November flash PMI: composite activity holds at 56.3, manufacturing strengthens to 56.0, while services moderates to 55.3. What the sector split means for India's macro outlook.",
-      "tags": [
         "India PMI",
-        "Manufacturing",
-        "Services",
-        "Economic Growth",
-        "India Macro"
+        "RBI",
+        "Global Markets",
+        "Rupee",
+        "Gold"
       ],
       "url": "issues/2026-11-23.html"
     },
