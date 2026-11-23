@@ -1,4 +1,4 @@
-/* Arthik View PWA installation and service-worker registration. */
+/* Arthik View PWA installation and OneSignal web-push setup. */
 (() => {
   const scriptUrl = document.currentScript
     ? new URL(document.currentScript.src, window.location.href)
@@ -13,6 +13,42 @@
     });
   }
 
+  // Load and initialize OneSignal on every publication page. The existing PWA
+  // worker is reused so both offline support and web push share one registration.
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  const oneSignalScript = document.createElement("script");
+  oneSignalScript.src = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
+  oneSignalScript.defer = true;
+  oneSignalScript.onload = () => {
+    window.OneSignalDeferred.push(async function (OneSignal) {
+      try {
+        await OneSignal.init({
+          appId: "29838496-43f1-400d-90b9-02b0db364120",
+          serviceWorkerPath: workerUrl.pathname,
+          serviceWorkerParam: { scope: workerScope },
+          notifyButton: { enable: false }
+        });
+      } catch (error) {
+        console.error("Arthik View notification setup failed:", error);
+      }
+    });
+  };
+  document.head.appendChild(oneSignalScript);
+
+  const notificationButton = document.getElementById("enableNotificationsBtn");
+  if (notificationButton) {
+    notificationButton.addEventListener("click", () => {
+      window.OneSignalDeferred.push(async function (OneSignal) {
+        try {
+          await OneSignal.Slidedown.promptPush();
+        } catch (error) {
+          console.error("Arthik View notification permission request failed:", error);
+          alert("Notifications could not be enabled in this browser. Please check your browser notification settings and try again.");
+        }
+      });
+    });
+  }
+
   const installButton = document.getElementById("installAppBtn");
   if (!installButton) return;
 
@@ -22,7 +58,6 @@
 
   if (isStandalone()) {
     installButton.hidden = true;
-    return;
   }
 
   window.addEventListener("beforeinstallprompt", event => {
@@ -37,7 +72,7 @@
       const isAppleMobile = /iphone|ipad|ipod/i.test(navigator.userAgent);
       alert(isAppleMobile
         ? "To install Arthik View: open this page in Safari, tap Share, then choose Add to Home Screen."
-        : "If your browser supports installation, open its menu and choose Install app or Add to Home screen. If that option is missing, the site may still be finishing its first deployment.");
+        : "If your browser supports installation, open its menu and choose Install app or Add to home screen. If that option is missing, the site may still be finishing its first deployment.");
       return;
     }
     installPrompt.prompt();
