@@ -1,0 +1,109 @@
+name: Notify Arthik View subscribers when an article is published
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "issues/*.html"
+      - "research/*.html"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notify-subscribers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out publication
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Send publication notifications through OneSignal
+        env:
+          ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
+          ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$ONESIGNAL_APP_ID" ] || [ -z "$ONESIGNAL_REST_API_KEY" ]; then
+            echo "::notice::Push delivery is not activated yet. Add ONESIGNAL_APP_ID and ONESIGNAL_REST_API_KEY repository secrets after configuring the OneSignal web app."
+            exit 0
+          fi
+
+          python - <<'PY'
+          import html
+          import json
+          import os
+          import subprocess
+          from html.parser import HTMLParser
+          from urllib.request import Request, urlopen
+
+          before = os.environ.get("BEFORE_SHA", "")
+          after = os.environ["AFTER_SHA"]
+          if not before or set(before) == {"0"}:
+              print("No previous commit is available; skipping automatic notification.")
+              raise SystemExit(0)
+
+          changed = subprocess.check_output(
+              ["git", "diff", "--diff-filter=AM", "--name-only", before, after, "--", "issues/*.html", "research/*.html"],
+              text=True
+          ).splitlines()
+          articles = [p for p in changed if p.endswith(".html") and p != "issues/issue-template.html"]
+          if not articles:
+              print("No newly published article pages found.")
+              raise SystemExit(0)
+
+          class ArticleMeta(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.in_title = False
+                  self.title_parts = []
+                  self.description = ""
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if tag == "title":
+                      self.in_title = True
+                  if tag == "meta" and attrs.get("name", "").lower() == "description":
+                      self.description = attrs.get("content", "")
+              def handle_data(self, data):
+                  if self.in_title:
+                      self.title_parts.append(data)
+              def handle_endtag(self, tag):
+                  if tag == "title":
+                      self.in_title = False
+
+          app_id = os.environ["ONESIGNAL_APP_ID"]
+          api_key = os.environ["ONESIGNAL_REST_API_KEY"]
+          base_url = "https://arthikview.github.io/daily-market-brief/"
+
+          for path in articles:
+              with open(path, encoding="utf-8") as file:
+                  parser = ArticleMeta()
+                  parser.feed(file.read())
+              title = html.unescape("".join(parser.title_parts).strip()) or "A new Arthik View article"
+              body = html.unescape(parser.description.strip()) or "A new article is now available on Arthik View."
+              article_url = base_url + path
+              payload = {
+                  "app_id": app_id,
+                  "included_segments": ["Subscribed Users"],
+                  "headings": {"en": "New on Arthik View"},
+                  "contents": {"en": title + " · " + body[:120]},
+                  "url": article_url
+              }
+              request = Request(
+                  "https://api.onesignal.com/notifications",
+                  data=json.dumps(payload).encode("utf-8"),
+                  headers={
+                      "Authorization": "Key " + api_key,
+                      "Content-Type": "application/json"
+                  },
+                  method="POST"
+              )
+              with urlopen(request, timeout=30) as response:
+                  result = json.loads(response.read().decode("utf-8"))
+                  if not result.get("id"):
+                      raise RuntimeError("OneSignal did not confirm a notification ID: " + json.dumps(result))
+                  print("Notification sent:", path, result["id"])
+          PY
