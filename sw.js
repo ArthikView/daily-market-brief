@@ -1,4 +1,8 @@
-/* Arthik View service worker: app shell, offline fallback and push display. */
+/* Arthik View PWA + OneSignal service worker.
+   OneSignal's worker SDK is imported into this same root-scoped worker so
+   offline caching and push notifications do not compete for registration. */
+importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
+
 const CACHE_NAME = "arthik-view-shell-v1";
 const BASE_PATH = new URL("./", self.registration.scope).pathname;
 const APP_SHELL = [
@@ -61,39 +65,6 @@ self.addEventListener("fetch", event => {
         }
         return response;
       });
-    })
-  );
-});
-
-self.addEventListener("push", event => {
-  let payload = {};
-  try { payload = event.data ? event.data.json() : {}; }
-  catch (_) { payload = { body: event.data ? event.data.text() : "A new publication is available." }; }
-
-  const target = payload.url || BASE_PATH;
-  const safeUrl = new URL(target, self.location.origin + BASE_PATH);
-  const url = safeUrl.origin === self.location.origin ? safeUrl.href : self.location.origin + BASE_PATH;
-
-  event.waitUntil(self.registration.showNotification(payload.title || "Arthik View", {
-    body: payload.body || payload.message || "A new article or market brief has been published.",
-    icon: self.location.origin + BASE_PATH + "assets/app-icon.svg",
-    badge: self.location.origin + BASE_PATH + "assets/favicon.svg",
-    data: { url },
-    tag: payload.tag || "arthik-view-publication"
-  }));
-});
-
-self.addEventListener("notificationclick", event => {
-  event.notification.close();
-  const target = event.notification.data && event.notification.data.url
-    ? event.notification.data.url
-    : self.location.origin + BASE_PATH;
-  event.waitUntil(
-    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(clientList => {
-      for (const client of clientList) {
-        if (client.url === target && "focus" in client) return client.focus();
-      }
-      if (self.clients.openWindow) return self.clients.openWindow(target);
     })
   );
 });
