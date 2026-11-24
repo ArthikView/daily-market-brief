@@ -3,7 +3,7 @@ const now = new Date();
 $('#yearNow').textContent = now.getFullYear();
 $('#todayLabel').textContent = now.toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
 $('#menuToggle').addEventListener('click',()=>{const nav=$('#mainNav');const open=nav.classList.toggle('open');$('#menuToggle').setAttribute('aria-expanded',String(open));});
-fetch('issues/index.json?v=20261123-2',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('No archive index');return r.json()}).then(data=>{
+fetch('issues/index.json?v=20261124-1',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('No archive index');return r.json()}).then(data=>{
  const issues=Array.isArray(data.issues)?data.issues:[];
  const sorted=[...issues].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
  const latest=$('#featuredIssues');
