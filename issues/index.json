@@ -1,6 +1,24 @@
 {
   "issues": [
     {
+      "date": "2026-11-25",
+      "title": "Dalal Street rebounds sharply, but the global risk-off signal has not cleared",
+      "summary": "The Sensex gains 1.82% and the Nifty 50 rises 1.85% as the rupee reaches an eight-month high. The RBI completes two overnight liquidity operations, while tariff uncertainty and AI-related selling keep global risk appetite fragile.",
+      "tags": [
+        "India Markets",
+        "Nifty 50",
+        "Sensex",
+        "RBI",
+        "Liquidity",
+        "Rupee",
+        "Government Bonds",
+        "Crude Oil",
+        "Gold",
+        "Global Markets"
+      ],
+      "url": "issues/2026-11-25.html"
+    },
+    {
       "date": "2026-11-24",
       "title": "A holiday pause on Dalal Street; RBI's next liquidity move and a global AI rebound in focus",
       "summary": "Indian cash markets close for Guru Nanak Jayanti as the RBI retains three D-SIBs and schedules fresh liquidity and bond operations. Asian equities rebound, while later US futures and European trading show the AI rally losing momentum.",
