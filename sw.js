@@ -3,7 +3,7 @@
    offline caching and push notifications do not compete for registration. */
 importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 
-const CACHE_NAME = "arthik-view-shell-v2";
+const CACHE_NAME = "arthik-view-shell-v3";
 const BASE_PATH = new URL("./", self.registration.scope).pathname;
 const APP_SHELL = [
   BASE_PATH,
