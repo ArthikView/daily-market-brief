@@ -1,6 +1,24 @@
 {
   "issues": [
     {
+      "date": "2026-11-27",
+      "title": "Markets retreat as oil and rupee pressure return; RBI adjusts liquidity rules",
+      "summary": "Nifty and Sensex retreat as IT, auto and financial shares come under pressure. The rupee weakens to ₹92.99 per dollar, Brent rises above $96.50, and the RBI reduces daily minimum CRR maintenance from 99% to 90% from 1 December.",
+      "tags": [
+        "India Markets",
+        "Nifty 50",
+        "Sensex",
+        "RBI",
+        "CRR",
+        "Banking Liquidity",
+        "Rupee",
+        "Crude Oil",
+        "Global Markets",
+        "US Treasury Yields"
+      ],
+      "url": "issues/2026-11-27.html"
+    },
+    {
       "date": "2026-11-26",
       "title": "IT-led gains lift Dalal Street as oil and rupee volatility return",
       "summary": "Nifty and Sensex extend gains as IT and realty lead; the RBI allots ₹1,20,738 crore across two overnight VRR operations. The rupee weakens with higher oil, US growth and core inflation remain firm, and India's next IIP and GDP releases approach.",
