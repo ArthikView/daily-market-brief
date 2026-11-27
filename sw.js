@@ -3,7 +3,7 @@
    offline caching and push notifications do not compete for registration. */
 importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 
-const CACHE_NAME = "arthik-view-shell-v4";
+const CACHE_NAME = "arthik-view-shell-v5";
 const BASE_PATH = new URL("./", self.registration.scope).pathname;
 const APP_SHELL = [
   BASE_PATH,
@@ -51,6 +51,21 @@ self.addEventListener("fetch", event => {
           return response;
         })
         .catch(async () => (await caches.match(request)) || (await caches.match(BASE_PATH + "offline.html")))
+    );
+    return;
+  }
+
+  // Always refresh the archive index from the network first. A stale cached
+  // index can otherwise hide newly published editions in the installed PWA.
+  if (url.pathname.endsWith("/issues/index.json")) {
+    event.respondWith(
+      fetch(request, { cache: "no-store" }).then(response => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+        }
+        return response;
+      }).catch(async () => (await caches.match(request)))
     );
     return;
   }
